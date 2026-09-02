@@ -95,7 +95,7 @@ jobs:
 
         curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/main/kernel/setup.sh" | bash -s main
 
-        export PATH=$PATH:$(pwd)/proton-clang/bin/
+        export PATH=$(pwd)/proton-clang/bin:$PATH
         export CC=clang
         export CLANG_TRIPLE=aarch64-linux-gnu-
         export CROSS_COMPILE=aarch64-linux-gnu-
@@ -105,9 +105,9 @@ jobs:
         export ANDROID_MAJOR_VERSION=r
         export KCFLAGS=-w
 
-        make O=out KCFLAGS=-w ARCH=arm64 CC="ccache clang" a10s_defconfig
+        make O=out KCFLAGS=-w ARCH=arm64 CC="ccache clang" CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- a10s_defconfig
 
-        make O=out KCFLAGS=-w ARCH=arm64 CC="ccache clang" -j$(nproc --all)
+        make O=out KCFLAGS=-w ARCH=arm64 CC="ccache clang" CLANG_TRIPLE=aarch64-linux-gnu- CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- -j$(nproc --all)
 
 
 
